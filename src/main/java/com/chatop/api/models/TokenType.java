@@ -1,0 +1,13 @@
+package com.chatop.api.models;
+
+public enum TokenType {
+    BEARER_TOKEN,
+    JWT_TOKEN,
+    API_KEY_TOKEN,
+    OAUTH2_TOKEN,
+    OAUTH2_ACCESS_TOKEN,
+    OAUTH2_REFRESH_TOKEN,
+    OAUTH2_AUTHORIZATION_CODE,
+    OAUTH2_CLIENT_CREDENTIALS,
+    SAML2_TOKEN
+}
