@@ -13,8 +13,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.chatop.api.repositories.IUserRepository;
-import com.chatop.api.services.CustomUserDetailsService;
 import com.chatop.api.services.JwtGeneratorService;
 
 import jakarta.servlet.FilterChain;
@@ -28,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtGeneratorService jwtService;
-    private final CustomUserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
    
     /**
@@ -81,6 +79,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             token = authHeader.substring(7);
             userEmail = jwtService.extractSubject(token);
+            
 
             // Check if the user is authenticated and the token is valid
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {

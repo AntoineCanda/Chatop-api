@@ -1,7 +1,9 @@
 package com.chatop.api.services;
 
+import java.util.Base64;
 import java.util.Date;
-import java.util.function.Function;
+
+import javax.crypto.SecretKey;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -10,7 +12,8 @@ import com.chatop.api.models.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import lombok.Data;
 
 /**
@@ -20,8 +23,9 @@ import lombok.Data;
 @Data
 public class JwtGeneratorService {
 
-    private static final String SECRET_KEY = "9Yb$Pc5Jd8Af#Bg2Ek3Hm6Np9Rs4Tu7Wx0Zq3Rv6Yb9Ec2Vf5Ih8Mj1Lk4Nm7Qo#";
-    private static final long EXPIRATION_TIME = 3600;
+    private final String SECRET_KEY_STRING = this.encodeStringToBase64("9Yb$Pc5Jd8Af#Bg2Ek3Hm6Np9Rs4Tu7Wx0Zq3Rv6Yb9Ec2Vf5Ih8Mj1Lk4Nm7Qo#");
+    private final SecretKey SECRET_KEY = this.getSigningKey();
+    private static final long EXPIRATION_TIME = 3600*1000;
 
     /**
      * Generates and returns a string token
@@ -30,10 +34,11 @@ public class JwtGeneratorService {
      */
     public String generateToken(User user){
         return Jwts.builder()
-                .setSubject(user.getEmail())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+                .subject(user.getEmail())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SECRET_KEY)
+                .compact();
     }
 
     /**
@@ -64,7 +69,7 @@ public class JwtGeneratorService {
      * @return the subject (email) extracted from the token
      */
     public String extractSubject(String token) {
-        return extractClaimsData(token, Claims::getSubject);
+        return extractAllClaims(token).getSubject();
     }
 
     /**
@@ -77,18 +82,7 @@ public class JwtGeneratorService {
         return extractExpiration(token).before(new Date());
     }
 
-    /**
-     * Extracts a specific claim from the provided token.
-     *
-     * @param token the token to extract the claim from
-     * @param claimsResolver a function that takes a {@link Claims} object and returns the desired claim
-     * @return the extracted claim
-     */
-    private <T> T extractClaimsData(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
-
+    
     /**
      * Extracts the expiration date from the provided token.
      *
@@ -96,7 +90,7 @@ public class JwtGeneratorService {
      * @return the expiration date extracted from the token
      */
     private Date extractExpiration(String token) {
-        return extractClaimsData(token, Claims::getExpiration);
+        return extractAllClaims(token).getExpiration();
     }
 
 
@@ -108,8 +102,19 @@ public class JwtGeneratorService {
      */
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(SECRET_KEY )
-                .parseClaimsJws(token)
-                .getBody();
+            .verifyWith(SECRET_KEY)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload();
     }
+    
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(this.SECRET_KEY_STRING);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    private String encodeStringToBase64(String string) {
+        return Base64.getEncoder().encodeToString(string.getBytes());
+    }
+
 }

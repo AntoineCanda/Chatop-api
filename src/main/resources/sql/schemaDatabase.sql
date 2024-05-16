@@ -35,7 +35,9 @@ CREATE TABLE `TOKENS` (
     `token` text,
     `user_id` integer,
     `token_type` text NOT NULL,
-    `expired` boolean NOT NULL DEFAULT false
+    `expired` boolean NOT NULL DEFAULT false,
+    `created_at` timestamp,
+    `valid` boolean
 );
 
 CREATE UNIQUE INDEX `USERS_index` ON `USERS` (`email`);
