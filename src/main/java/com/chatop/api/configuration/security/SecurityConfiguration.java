@@ -46,18 +46,17 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     // Configure the authorization rules for HTTP requests
     http.authorizeHttpRequests(requestMatcherRegistry -> requestMatcherRegistry
             // Do not authenticate these requests
-             .requestMatchers(
-                antMatcher(HttpMethod.GET, "/swagger-ui**"),
-                antMatcher(HttpMethod.GET,  "/swagger-ui/**"),
+              .requestMatchers(
+                antMatcher(HttpMethod.GET, "/swagger**"),
                 antMatcher(HttpMethod.GET,  "/swagger-ui"),
-                antMatcher(HttpMethod.GET,  "/swagger-ui.html"),
+                antMatcher(HttpMethod.GET, "/swagger-ui/**"),
+                antMatcher(HttpMethod.GET, "/v3/api-docs/**"),
+                antMatcher(HttpMethod.GET, "/v3/api-docs**"),
                 antMatcher(HttpMethod.POST, "/api/auth/login"),
                 antMatcher(HttpMethod.POST, "/api/auth/register"),
-                antMatcher(HttpMethod.GET, "/images/**"),
-                antMatcher(HttpMethod.GET, "/swagger-ui/**"),
-                antMatcher(HttpMethod.GET, "/v3/api-docs/**")
+                antMatcher(HttpMethod.GET, "/images/**")
                 )
-            .permitAll() 
+                .permitAll() 
             // Authenticate these requests
             .requestMatchers(antMatcher("/api/**"))
             .authenticated()
