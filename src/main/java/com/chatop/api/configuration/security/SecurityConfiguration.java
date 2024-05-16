@@ -8,15 +8,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import com.chatop.api.repositories.IUserRepository;
-import com.chatop.api.services.CustomUserDetailsService;
-
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -53,11 +46,18 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     // Configure the authorization rules for HTTP requests
     http.authorizeHttpRequests(requestMatcherRegistry -> requestMatcherRegistry
             // Do not authenticate these requests
-            .requestMatchers(antMatcher(HttpMethod.POST, "/api/auth/login"),
-                    antMatcher(HttpMethod.POST, "/api/auth/register"),
-                    antMatcher(HttpMethod.GET, "/images/**"),
-                    antMatcher(HttpMethod.GET, "/doc/**"))
-            .permitAll()
+             .requestMatchers(
+                antMatcher(HttpMethod.GET, "/swagger-ui**"),
+                antMatcher(HttpMethod.GET,  "/swagger-ui/**"),
+                antMatcher(HttpMethod.GET,  "/swagger-ui"),
+                antMatcher(HttpMethod.GET,  "/swagger-ui.html"),
+                antMatcher(HttpMethod.POST, "/api/auth/login"),
+                antMatcher(HttpMethod.POST, "/api/auth/register"),
+                antMatcher(HttpMethod.GET, "/images/**"),
+                antMatcher(HttpMethod.GET, "/swagger-ui/**"),
+                antMatcher(HttpMethod.GET, "/v3/api-docs/**")
+                )
+            .permitAll() 
             // Authenticate these requests
             .requestMatchers(antMatcher("/api/**"))
             .authenticated()
@@ -77,6 +77,6 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     return http.build();
 }	
 		
-    
+  
     
 }

@@ -7,11 +7,11 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.chatop.api.repositories.IUserRepository;
-import com.chatop.api.services.CustomUserDetailsService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,17 +32,19 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new CustomUserDetailsService(userRepository); // Implémentez CustomUserDetailsService
+        return username -> userRepository.findByEmail(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+  
     /**
-     * Bean method to create an instance of {@link UserDetailsService}.
+     * Bean method to create an instance of {@link AuthenticationProvider}.
      * This service is responsible for loading user-specific data from the database.
      *
-     * @return an instance of {@link CustomUserDetailsService} that uses the provided {@link IUserRepository}
+     * @return an instance of {@link AuthenticationProvider} that uses the provided {@link userDetailsService}.
      */
-     @Bean
-    public AuthenticationProvider authenticationProvider(IUserRepository userRepository) {
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailsService());
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
