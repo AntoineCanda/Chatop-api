@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 
@@ -17,6 +18,7 @@ import lombok.NonNull;
  */
 @Data
 @Entity
+@Builder
 @Table(name="MESSAGES")
 public class Message implements Serializable {
 
