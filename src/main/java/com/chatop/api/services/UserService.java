@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.chatop.api.dto.TokenDTO;
+import com.chatop.api.dto.UserDTO;
 import com.chatop.api.exceptions.NotFoundException;
 import com.chatop.api.models.User;
 import com.chatop.api.repositories.IUserRepository;
@@ -34,4 +35,14 @@ public class UserService {
         LOGGER.info("Utilisateur trouve : {}", user.getEmail());
         
         return user;
-    }}
+    }
+
+    public UserDTO getUserById(Integer id){
+        LOGGER.info("Obtention de l'utilisateur a partir de son id.");
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+        UserDTO userDTO = user.getUserDTOFromUser(user);
+        return userDTO;
+    }
+}
+
+
