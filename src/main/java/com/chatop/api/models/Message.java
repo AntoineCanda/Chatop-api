@@ -9,8 +9,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 /**
@@ -19,11 +21,14 @@ import lombok.NonNull;
 @Data
 @Entity
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name="MESSAGES")
 public class Message implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private int id;
 
     @Column(name="rental_id")
@@ -33,7 +38,7 @@ public class Message implements Serializable {
     private int user_id;
 
     @NonNull
-    @Column(name="message")
+    @Column(name="message", length=2000)
     private String message;
 
     @Column(name="created_at")

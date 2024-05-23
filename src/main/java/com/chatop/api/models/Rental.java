@@ -8,8 +8,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 /**
@@ -18,6 +20,8 @@ import lombok.NonNull;
 @Builder
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "RENTALS")
 public class Rental implements Serializable {
 
@@ -26,7 +30,7 @@ public class Rental implements Serializable {
     private Integer id;
 
     @NonNull
-    @Column(name="name")
+    @Column(name="name", length=255)
     private String name;
 
     @NonNull
@@ -42,7 +46,7 @@ public class Rental implements Serializable {
     private String picture;
 
     @NonNull
-    @Column(name="description")
+    @Column(name="description", length=2000)
     private String description;
 
     @NonNull

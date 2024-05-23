@@ -14,6 +14,7 @@ import com.chatop.api.dto.RentalDTO;
 import com.chatop.api.dto.RentalRequestDTO;
 import com.chatop.api.dto.RentalsDTO;
 import com.chatop.api.dto.ResponseDTO;
+import com.chatop.api.dto.TokenDTO;
 import com.chatop.api.services.RentalService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RentalsController {
 
-    private RentalService rentalService;
+    private final RentalService rentalService;
 
     @Operation(summary = "Find all rentals", tags = {"Rentals"})
     @ApiResponses(value = {
@@ -69,7 +70,9 @@ public class RentalsController {
         @SecurityRequirement(name = "Bearer Authentication Required")
 @PostMapping(value = "/")
     public ResponseEntity<ResponseDTO> createRental(@RequestHeader("Authorization") String token, @ModelAttribute RentalRequestDTO rentalRequest) {
-        return ResponseEntity.ok(rentalService.createRental(token, rentalRequest));
+        TokenDTO tokenDTO = new TokenDTO(token.replace("Bearer ", ""));
+
+        return ResponseEntity.ok(rentalService.createRental(tokenDTO, rentalRequest));
     }
 
     @Operation(summary = "Update rental", description = "Updating an existing rental.", tags = {"Rentals"})

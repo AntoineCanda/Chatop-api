@@ -1,9 +1,11 @@
 package com.chatop.api.services;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.chatop.api.dto.RentalDTO;
 import com.chatop.api.dto.RentalRequestDTO;
@@ -15,21 +17,23 @@ import com.chatop.api.exceptions.NotFoundException;
 import com.chatop.api.models.Rental;
 import com.chatop.api.repositories.IRentalRepository;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Data
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Service
 public class RentalService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RentalService.class);
     private final UserService userService;
-    private final IRentalRepository rentalRepository = null;
+    private final IRentalRepository rentalRepository;
 
     public RentalsDTO getAllRentals() {
 
         LOGGER.info("Debut de la recuperation de tous les logements");
         RentalsDTO rentalsDTO = new RentalsDTO();
+        rentalsDTO.setRentals(new ArrayList<>());
         try {
             Iterable<Rental> rentals = rentalRepository.findAll();
             rentals.forEach((rental) -> {
@@ -74,9 +78,8 @@ public class RentalService {
         }
     }
 
-    public ResponseDTO createRental(String token, RentalRequestDTO rentalDTO) {
+    public ResponseDTO createRental(TokenDTO tokenDTO, RentalRequestDTO rentalDTO) {
        try {
-            TokenDTO tokenDTO = new TokenDTO(token);
             Integer ownerId = userService.getUserFromToken(tokenDTO).getId();
             
             Rental rental = Rental.builder()

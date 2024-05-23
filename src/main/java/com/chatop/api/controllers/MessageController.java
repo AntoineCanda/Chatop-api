@@ -38,7 +38,7 @@ public class MessageController {
     @SecurityRequirement(name = "Bearer Authentication Required")
     @PostMapping("/") 
     public ResponseEntity<?> createRental(@Valid @RequestBody MessageDTO messageDTO, @RequestHeader("Authorization") String token) {
-        TokenDTO tokenDTO = new TokenDTO(token);
+        TokenDTO tokenDTO = new TokenDTO(token.replace("Bearer ", ""));
         messageService.createMessage(messageDTO, tokenDTO);
         return ResponseEntity.ok(Collections.singletonMap("message", "Message send with success !"));
     }
