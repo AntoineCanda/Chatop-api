@@ -8,39 +8,45 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 /**
  * Rental entity class
  */
+@Builder
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "RENTALS")
 public class Rental implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @NonNull
-    @Column(name="name")
+    @Column(name="name", length=255)
     private String name;
 
     @NonNull
     @Column(name="surface")
-    private Integer surface;
+    private Double surface;
 
     @NonNull
     @Column(name="price")
-    private Integer price;
+    private Double price;
 
     @NonNull
     @Column(name="picture")
     private String picture;
 
     @NonNull
-    @Column(name="description")
+    @Column(name="description", length=2000)
     private String description;
 
     @NonNull

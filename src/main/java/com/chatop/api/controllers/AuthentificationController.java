@@ -32,7 +32,7 @@ public class AuthentificationController {
     @Autowired
     private final AuthentificationService authentificationService;
     
-    @Operation(summary = "Authentification d'un utilisateur", description = "Authentification d'un utilisateur")
+    @Operation(summary = "Authentification d'un utilisateur", description = "Authentification d'un utilisateur", tags={"Authentication"})
 	@ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Utilisateur connecté avec succès.",
                     content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TokenDTO.class)))}),
@@ -45,7 +45,7 @@ public class AuthentificationController {
         return ResponseEntity.ok(token);
     }
     
-    @Operation(summary = "Enregistrement d'un nouvel utilisateur", description = "Enregistrement d'un nouvel utilisateur")
+    @Operation(summary = "Enregistrement d'un nouvel utilisateur", description = "Enregistrement d'un nouvel utilisateur", tags={"Authentication"})
 	@ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Utilisateur enregistré avec succès.",
                     content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TokenDTO.class)))}),
@@ -58,7 +58,7 @@ public class AuthentificationController {
         return ResponseEntity.ok(token);
     }
 
-    @Operation(summary = "Obtention des données de l'utilisateur", description = "Obtention des données de l'utilisateur")
+    @Operation(summary = "Obtention des données de l'utilisateur", description = "Obtention des données de l'utilisateur", tags={"Authentication"})
 	@ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Donnée de l'utilisateur.",
                     content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))}),

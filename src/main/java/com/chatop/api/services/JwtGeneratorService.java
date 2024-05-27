@@ -5,14 +5,20 @@ import java.util.Date;
 
 import javax.crypto.SecretKey;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.chatop.api.exceptions.TokenException;
+import com.chatop.api.exceptions.TokenValidationException;
 import com.chatop.api.models.User;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.InvalidKeyException;
 import io.jsonwebtoken.security.Keys;
 import lombok.Data;
 
@@ -26,6 +32,7 @@ public class JwtGeneratorService {
     private final String SECRET_KEY_STRING = this.encodeStringToBase64("9Yb$Pc5Jd8Af#Bg2Ek3Hm6Np9Rs4Tu7Wx0Zq3Rv6Yb9Ec2Vf5Ih8Mj1Lk4Nm7Qo#");
     private final SecretKey SECRET_KEY = this.getSigningKey();
     private static final long EXPIRATION_TIME = 3600*1000;
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtGeneratorService.class);
 
     /**
      * Generates and returns a string token
@@ -33,12 +40,19 @@ public class JwtGeneratorService {
      * @return String (token) a JWT (JSON Web Token) string representing the token
      */
     public String generateToken(User user){
-        return Jwts.builder()
+        try {
+            LOGGER.info("Generating token...");
+            
+            return Jwts.builder()
                 .subject(user.getEmail())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SECRET_KEY)
                 .compact();
+        } catch (InvalidKeyException e) {
+            LOGGER.error(e.getMessage());
+            throw new TokenException(e.getMessage());
+        }
     }
 
     /**
@@ -101,11 +115,21 @@ public class JwtGeneratorService {
      * @return The claims extracted from the token.
      */
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
+        try {
+            return Jwts.parser()
             .verifyWith(SECRET_KEY)
             .build()
             .parseSignedClaims(token)
             .getPayload();
+        } catch (JwtException | IllegalArgumentException e) {
+            LOGGER.error(e.getMessage());
+            if(e instanceof JwtException) {
+                throw new TokenValidationException(e.getMessage());
+            }
+            else {
+                throw new TokenException(e.getMessage());
+            }
+        }
     }
     
     private SecretKey getSigningKey() {

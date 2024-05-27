@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final String requestURI = request.getRequestURI();
             // Do not filter login and register requests as well as swagger-ui and api-docs requests
             if (!requestURI.contains("/api/auth/login") && !requestURI.contains("/api/auth/register")
-                    && !requestURI.contains("swagger-ui") && !requestURI.contains("api/v1/docs")) {
+                    && !requestURI.contains("swagger-ui") && !requestURI.contains("v3/api-docs")) {
                 verifyJwtToken(request, authHeader);
             }
             filterChain.doFilter(request, response);

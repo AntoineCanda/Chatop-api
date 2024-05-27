@@ -37,22 +37,20 @@ import lombok.RequiredArgsConstructor;
 @Table(name="USERS")
 public class User implements UserDetails {
 
-    
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @NonNull
-    @Column(name="email" ,nullable = false, unique = true)
+    @Column(name="email" ,nullable = false, unique = true, length=255)
     private String email;
 
     @NonNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length=255)
     private String name;
 
     @NonNull
-    @Column(name="password",nullable = false)
+    @Column(name="password",nullable = false, length=255)
     private String password;
 
     @Column(name="created_at")
