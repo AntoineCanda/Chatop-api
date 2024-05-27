@@ -21,6 +21,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -88,6 +89,7 @@ public class AuthentificationController {
         @ApiResponse(responseCode = "401", description = "Invalid token.",
                 content = {
                     @Content(mediaType = "application/json")}),})
+    @SecurityRequirement(name = "Bearer token")
     @GetMapping("/me")
     public ResponseEntity<UserDTO> me(@RequestHeader("Authorization") String token) {
 

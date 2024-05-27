@@ -39,7 +39,7 @@ public class UserController {
         @ApiResponse(responseCode = "401", description = "Invalid user. UNAUTHORIZED",
                 content = @Content)
     })
-    @SecurityRequirement(name = "Bearer Authentication Required")
+    @SecurityRequirement(name = "Bearer token")
     @GetMapping("/{id}") // Maps HTTP GET requests to /api/user/{id} to this method
     public ResponseEntity<UserDTO> getUserById(@PathVariable Integer id) {
         // Calls the userService to find a user by their ID and return their details

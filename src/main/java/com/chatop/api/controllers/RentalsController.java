@@ -46,7 +46,7 @@ public class RentalsController {
                             schema = @Schema(implementation = RentalsDTO.class))}),
         @ApiResponse(responseCode = "401", description = "Access denied because the user is invalid. UNAUTHORIZED",
                 content = @Content)})
-    @SecurityRequirement(name = "Bearer Authentication Required")
+    @SecurityRequirement(name = "Bearer token")
     @GetMapping(value = "/", produces = "application/json")
     public ResponseEntity<RentalsDTO> getAllRentals() {
         return ResponseEntity.ok(rentalService.getAllRentals());
@@ -68,7 +68,7 @@ public class RentalsController {
         @ApiResponse(responseCode = "401", description = "Access denied because the user is invalid. UNAUTHORIZED",
                 content = @Content)
     })
-    @SecurityRequirement(name = "Bearer Authentication Required")
+    @SecurityRequirement(name = "Bearer token")
     @GetMapping(value = "/{id}") // Maps GET requests with an ID to this method
     public ResponseEntity<RentalDTO> getRentalById(@PathVariable Integer id) {
         return ResponseEntity.ok(rentalService.getRentalById(id));
@@ -90,7 +90,7 @@ public class RentalsController {
                             schema = @Schema(implementation = ResponseDTO.class))}),
         @ApiResponse(responseCode = "401", description = "Access denied because the user is invalid. UNAUTHORIZED",
                 content = @Content)})
-    @SecurityRequirement(name = "Bearer Authentication Required")
+    @SecurityRequirement(name = "Bearer token")
     @PostMapping(value = "/")
     public ResponseEntity<ResponseDTO> createRental(@RequestHeader("Authorization") String token, @ModelAttribute RentalRequestDTO rentalRequest) {
         TokenDTO tokenDTO = new TokenDTO(token.replace("Bearer ", ""));
@@ -116,7 +116,7 @@ public class RentalsController {
         @ApiResponse(responseCode = "401", description = "Invalid user. UNAUTHORIZED",
                 content = @Content)
     })
-    @SecurityRequirement(name = "Bearer Authentication Required")
+    @SecurityRequirement(name = "Bearer token")
     @PutMapping(value = "/{id}")
     public ResponseEntity<ResponseDTO> updateRental(@PathVariable("id") Integer id, @ModelAttribute RentalRequestDTO rentalRequest) {
         return ResponseEntity.ok(rentalService.updateRental(id, rentalRequest));

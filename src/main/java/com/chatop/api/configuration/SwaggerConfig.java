@@ -25,8 +25,8 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .components(new Components()
-                        .addSecuritySchemes("token",
-                                new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
+                        .addSecuritySchemes("Bearer token",
+                                new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("jwt").in(SecurityScheme.In.HEADER)))
                 .info(new Info()
                         .title("Chatop API")
                         .version("1.0.0")

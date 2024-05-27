@@ -47,7 +47,7 @@ public class MessageController {
         @ApiResponse(responseCode = "400", description = "Message, rental or user cannot be empty. BAD_REQUEST", content = @Content),
         @ApiResponse(responseCode = "401", description = "Invalid user. UNAUTHORIZED", content = @Content)
     })
-    @SecurityRequirement(name = "Bearer Authentication Required")
+    @SecurityRequirement(name = "Bearer token")
     @PostMapping("/")
     public ResponseEntity<?> createRental(@Valid @RequestBody MessageDTO messageDTO, @RequestHeader("Authorization") String token) {
         TokenDTO tokenDTO = new TokenDTO(token.replace("Bearer ", ""));
