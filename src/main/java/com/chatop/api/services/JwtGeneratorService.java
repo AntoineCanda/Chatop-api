@@ -29,7 +29,8 @@ import lombok.Data;
 @Data
 public class JwtGeneratorService {
 
-    private final String SECRET_KEY_STRING = this.encodeStringToBase64("9Yb$Pc5Jd8Af#Bg2Ek3Hm6Np9Rs4Tu7Wx0Zq3Rv6Yb9Ec2Vf5Ih8Mj1Lk4Nm7Qo#");
+    private final String KEY = System.getenv("JWT_KEY");
+    private final String SECRET_KEY_STRING = this.encodeStringToBase64(KEY);
     private final SecretKey SECRET_KEY = this.getSigningKey();
     private static final long EXPIRATION_TIME = 3600 * 1000;
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtGeneratorService.class);
