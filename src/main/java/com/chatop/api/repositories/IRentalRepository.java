@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.chatop.api.models.Rental;
 
 @Repository
-public interface IRentalRepository extends CrudRepository<Rental, Integer>{
+public interface IRentalRepository extends CrudRepository<Rental, Integer> {
 
 }

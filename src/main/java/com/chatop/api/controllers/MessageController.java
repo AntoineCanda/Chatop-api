@@ -28,15 +28,27 @@ public class MessageController {
 
     private final MessageService messageService;
 
-     @Operation(summary = "Create a message", description = "Create a message for a rental.", tags={"Message"})
-            @ApiResponses(value = {
-                    @ApiResponse(responseCode = "200", description = "Message created.",
-                            content = {@Content(mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Message, rental or user cannot be empty. BAD_REQUEST", content = @Content),
-                    @ApiResponse(responseCode = "401", description = "Invalid user. UNAUTHORIZED", content = @Content)
-            })
+    /**
+     * Creates a new message for a rental.
+     *
+     * @param messageDTO The message details to be created.
+     * @param token The token representing the authenticated user.
+     *
+     * @return A {@link ResponseEntity} containing a success message if the
+     * message is successfully created.
+     *
+     *
+     */
+    @Operation(summary = "Create a message", description = "Create a message for a rental.", tags = {"Message"})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Message created.",
+                content = {
+                    @Content(mediaType = "application/json")}),
+        @ApiResponse(responseCode = "400", description = "Message, rental or user cannot be empty. BAD_REQUEST", content = @Content),
+        @ApiResponse(responseCode = "401", description = "Invalid user. UNAUTHORIZED", content = @Content)
+    })
     @SecurityRequirement(name = "Bearer Authentication Required")
-    @PostMapping("/") 
+    @PostMapping("/")
     public ResponseEntity<?> createRental(@Valid @RequestBody MessageDTO messageDTO, @RequestHeader("Authorization") String token) {
         TokenDTO tokenDTO = new TokenDTO(token.replace("Bearer ", ""));
         messageService.createMessage(messageDTO, tokenDTO);

@@ -23,27 +23,27 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "TOKENS")
 public class Token implements Serializable {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name="token")
+    @Column(name = "token")
     private String token;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="token_type")
+    @Column(name = "token_type")
     private TokenType type;
 
-    @Column(name="expired")
+    @Column(name = "expired")
     private boolean expired;
 
-    @Column(name="valid")
+    @Column(name = "valid")
     private boolean valid;
 
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private Integer user_id;
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     private Timestamp createdAt;
 }

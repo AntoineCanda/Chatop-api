@@ -37,35 +37,60 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class AuthentificationService {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthentificationService.class);
-    private final AuthenticationManager authentificateurManager;
+    private final AuthenticationManager authenticateManager;
     private final PasswordEncoder passwordEncoder;
-    
+
     private final IUserRepository userRepository;
     private final ITokenRepository tokenRepository;
     private final JwtGeneratorService jwtGeneratorService;
     private final UserService userService;
 
+    /**
+     * Authenticates the user and generates a token.
+     *
+     * @param credentials The credentials of the user to authenticate.
+     * @return A tokenDTO object containing the generated token.
+     * @throws AuthentificationException If the credentials are invalid.
+     */
     @Transactional
     public TokenDTO login(CredentialsDTO credentials) {
         LOGGER.info("Debut de l'authentification de l'utilisateur : {}", credentials.getEmail());
 
         try {
-            authentificateurManager.authenticate(new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword()));
+            // Attempts to authenticate the user using the provided credentials.
+            // If the credentials are invalid, a BadCredentialsException is thrown.
+            authenticateManager.authenticate(new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword()));
         } catch (BadCredentialsException e) {
+            // Throws an AuthentificationException with a message indicating that the credentials are invalid.
             throw new AuthentificationException("Invalid credentials. Please verify and try again.");
         }
 
+        // Retrieves the user from the database using the provided email.
+        // If the user is not found, an exception is thrown.
         User user = userRepository.findByEmail(credentials.getEmail()).orElseThrow();
 
         LOGGER.info("Utilisateur trouve : {}", user.toString());
+        // Disables all valid tokens for the user.
         this.disableAllTokensForUser(user);
+        // Generates a token for the authenticated user.
         String token = jwtGeneratorService.generateToken(user);
-        
+        // Processes the generated token and returns a TokenDTO object containing the token.
         return this.processToken(user, token);
     }
 
+    /**
+     * Registers a new user.
+     *
+     * @param userData The registration data for the new user.
+     * @return A TokenDTO object containing the generated token.
+     * @throws UserConflictException If an user already exists with the provided
+     * email.
+     * @throws DatabaseException If an error occurs while processing the
+     * registration.
+     */
+    @Transactional
     public TokenDTO register(RegisterUserDTO userData) {
         LOGGER.info("Debut de l'inscription de l'utilisateur : {}", userData.getEmail());
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -83,7 +108,7 @@ public class AuthentificationService {
                 .createdAt(timestamp)
                 .updatedAt(timestamp)
                 .build();
-        
+
         try {
             User savedUser = userRepository.save(user);
             LOGGER.info("Utilisateur sauvegarde : {}", savedUser.getEmail());
@@ -108,8 +133,13 @@ public class AuthentificationService {
         return userDTO;
     }
 
-    
-
+    /**
+     * Disables all valid tokens for the specified user.
+     *
+     * @param user The user whose tokens should be disabled.
+     * @throws DatabaseException If an error occurs while processing the token
+     * disabling.
+     */
     private void disableAllTokensForUser(User user) {
         LOGGER.info("Desactivation de tous les tokens valides pour l'utilisateur : {}", user.getEmail());
 
@@ -124,9 +154,17 @@ public class AuthentificationService {
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new DatabaseException(e.getMessage());
-        }  
+        }
     }
 
+    /**
+     * Saves a new token for the specified user.
+     *
+     * @param user The user whose token should be saved.
+     * @param token The token to be saved for the user.
+     * @throws DatabaseException If an error occurs while processing the token
+     * saving.
+     */
     private void saveToken(User user, String token) {
         LOGGER.info("Sauvegarde du nouveau token pour l'utilisateur : {}", user.getEmail());
 
@@ -136,7 +174,7 @@ public class AuthentificationService {
         newToken.setExpired(false);
         newToken.setUser_id(user.getId());
         newToken.setType(TokenType.BEARER_TOKEN);
-        newToken.setCreatedAt(new Timestamp( System.currentTimeMillis()));
+        newToken.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
         try {
             tokenRepository.save(newToken);
@@ -146,19 +184,28 @@ public class AuthentificationService {
         }
     }
 
-    private TokenDTO processToken(User user, String token){
-
+    /**
+     * Processes the generated token and returns a TokenDTO object containing
+     * the token.
+     *
+     * @param user The authenticated user.
+     * @param token The generated token.
+     * @return A TokenDTO object containing the token.
+     * @throws DatabaseException If an error occurs while processing the token.
+     */
+    private TokenDTO processToken(User user, String token) {
         try {
-            
+            // Saves a new token for the specified user.
             this.saveToken(user, token);
+            // Creates a new TokenDTO object with the generated token.
             TokenDTO tokenDTO = new TokenDTO(token);
-
+            // Returns the TokenDTO object containing the token.
             return tokenDTO;
-
         } catch (Exception e) {
+            // Logs the error message.
             LOGGER.error(e.getMessage());
+            // Throws a DatabaseException with the error message.
             throw new DatabaseException(e.getMessage());
         }
-        
     }
 }

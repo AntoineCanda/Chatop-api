@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RentalsDTO {
- @Schema(type = "array", description = "List of rentals")
+
+    @Schema(type = "array", description = "List of rentals")
     List<RentalDTO> rentals;
 }

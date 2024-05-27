@@ -28,16 +28,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtGeneratorService jwtService;
     private final UserDetailsService userDetailsService;
 
-   
     /**
-     * Same contract as for {@code doFilter}, but guaranteed to be
-     * just invoked once per request within a single request thread.
-     * See {@link #shouldNotFilterAsyncDispatch()} for details.
-     * <p>Provides HttpServletRequest and HttpServletResponse arguments instead of the
-     * default ServletRequest and ServletResponse ones.
+     * Same contract as for {@code doFilter}, but guaranteed to be just invoked
+     * once per request within a single request thread. See
+     * {@link #shouldNotFilterAsyncDispatch()} for details.
+     * <p>
+     * Provides HttpServletRequest and HttpServletResponse arguments instead of
+     * the default ServletRequest and ServletResponse ones.
      *
-     * @param request     current HTTP request
-     * @param response    current HTTP response
+     * @param request current HTTP request
+     * @param response current HTTP response
      * @param filterChain chain of filters
      * @throws jakarta.servlet.ServletException
      * @throws java.io.IOException
@@ -60,9 +60,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     /**
-     * Verifies the JWT token in the request header and sets the authentication context if the token is valid.
+     * Verifies the JWT token in the request header and sets the authentication
+     * context if the token is valid.
      *
-     * @param request  the HTTP request containing the authorization header
+     * @param request the HTTP request containing the authorization header
      * @param authHeader the authorization header containing the token
      * @throws AccessDeniedException if the token is invalid or missing
      */
@@ -79,7 +80,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             token = authHeader.substring(7);
             userEmail = jwtService.extractSubject(token);
-            
 
             // Check if the user is authenticated and the token is valid
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
