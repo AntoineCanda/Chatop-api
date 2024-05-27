@@ -39,12 +39,12 @@ public class AuthentificationController {
      * @return A TokenDTO object containing the token for the authenticated
      * user.
      */
-    @Operation(summary = "Authentification d'un utilisateur", description = "Authentification d'un utilisateur", tags = {"Authentication"})
+    @Operation(summary = "Authenticate user", description = "Authenticate user by email and password, and return a JWT.", tags = {"Authentication"})
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Utilisateur connecté avec succès.",
+        @ApiResponse(responseCode = "200", description = "User successfully authenticated.",
                 content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TokenDTO.class)))}),
-        @ApiResponse(responseCode = "401", description = "Votre email ou mot de passe n'est pas valide. Connexion non autorisée.",
+        @ApiResponse(responseCode = "401", description = "Your email address or your password is incorrect.",
                 content = {
                     @Content(mediaType = "application/json")}),})
     @PostMapping("/login")
@@ -60,12 +60,12 @@ public class AuthentificationController {
      * @return A TokenDTO object containing the token for the newly registered
      * user.
      */
-    @Operation(summary = "Enregistrement d'un nouvel utilisateur", description = "Enregistrement d'un nouvel utilisateur", tags = {"Authentication"})
+    @Operation(summary = "Register user", description = "Register user with email and password, and return a JWT.", tags = {"Authentication"})
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Utilisateur enregistré avec succès.",
+        @ApiResponse(responseCode = "200", description = "User is registered.",
                 content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TokenDTO.class)))}),
-        @ApiResponse(responseCode = "400", description = "Contenu du body de la requête non valide.",
+        @ApiResponse(responseCode = "400", description = "The body of the request is invalid.",
                 content = {
                     @Content(mediaType = "application/json")}),})
     @PostMapping("/register")
@@ -80,12 +80,12 @@ public class AuthentificationController {
      * @param token The JWT token representing the authenticated user.
      * @return The user data for the authenticated user.
      */
-    @Operation(summary = "Obtention des données de l'utilisateur", description = "Obtention des données de l'utilisateur", tags = {"Authentication"})
+    @Operation(summary = "Get user info", description = "Get user information.", tags = {"Authentication"})
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Donnée de l'utilisateur.",
+        @ApiResponse(responseCode = "200", description = "User information.",
                 content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))}),
-        @ApiResponse(responseCode = "401", description = "Utilisateur non reconnu.",
+        @ApiResponse(responseCode = "401", description = "Invalid token.",
                 content = {
                     @Content(mediaType = "application/json")}),})
     @GetMapping("/me")
