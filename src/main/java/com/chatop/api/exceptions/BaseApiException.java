@@ -10,6 +10,7 @@ import lombok.Getter;
 
 @Getter
 public class BaseApiException extends RuntimeException {
+
     private final HttpStatus httpStatus;
     private final ApiCodeEnum apiCodeEnum;
     private final List<String> errors;

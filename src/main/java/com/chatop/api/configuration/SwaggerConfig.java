@@ -16,21 +16,22 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 @Configuration
 public class SwaggerConfig {
 
-
-	@Bean
+    /**
+     * Configures the OpenAPI for the Chatop API.
+     *
+     * @return the customized OpenAPI object
+     */
+    @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-		
                 .components(new Components()
-                        .addSecuritySchemes("token",
-                                new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
-								.info(new Info()
-								.title("Chatop API")
-								.version("1.0.0")
-								.description("Chatop API")
-								.license(new io.swagger.v3.oas.models.info.License()));
+                        .addSecuritySchemes("Bearer token",
+                                new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("jwt").in(SecurityScheme.In.HEADER)))
+                .info(new Info()
+                        .title("Chatop API")
+                        .version("1.0.0")
+                        .description("Chatop API")
+                        .license(new io.swagger.v3.oas.models.info.License()));
 
-	}
+    }
 }
-
-

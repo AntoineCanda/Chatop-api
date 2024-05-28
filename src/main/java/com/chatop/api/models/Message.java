@@ -23,7 +23,7 @@ import lombok.NonNull;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="MESSAGES")
+@Table(name = "MESSAGES")
 public class Message implements Serializable {
 
     @Id
@@ -31,22 +31,20 @@ public class Message implements Serializable {
     @Column(name = "id", nullable = false)
     private int id;
 
-    @Column(name="rental_id")
+    @Column(name = "rental_id")
     private int rental_id;
 
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private int user_id;
 
     @NonNull
-    @Column(name="message", length=2000)
+    @Column(name = "message", length = 2000)
     private String message;
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     private Timestamp created_at;
 
-    @Column(name="updated_at")
+    @Column(name = "updated_at")
     private Timestamp updated_at;
 
-} 
-
-
+}

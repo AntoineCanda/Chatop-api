@@ -34,7 +34,7 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder
-@Table(name="USERS")
+@Table(name = "USERS")
 public class User implements UserDetails {
 
     @Id
@@ -42,21 +42,21 @@ public class User implements UserDetails {
     private int id;
 
     @NonNull
-    @Column(name="email" ,nullable = false, unique = true, length=255)
+    @Column(name = "email", nullable = false, unique = true, length = 255)
     private String email;
 
     @NonNull
-    @Column(name = "name", nullable = false, length=255)
+    @Column(name = "name", nullable = false, length = 255)
     private String name;
 
     @NonNull
-    @Column(name="password",nullable = false, length=255)
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     private Timestamp createdAt;
 
-    @Column(name="updated_at")
+    @Column(name = "updated_at")
     private Timestamp updatedAt;
 
     @Column(name = "role")
@@ -66,21 +66,43 @@ public class User implements UserDetails {
     @Column(name = "active")
     private boolean active;
 
+    /**
+     * Returns the list of authorities granted to the user.
+     *
+     * @return a list containing a single {@link SimpleGrantedAuthority}
+     * instance with the user's role as its authority.
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+    /**
+     * Returns the username of the user.
+     *
+     * @return the email of the user, which is used as the username for
+     * authentication purposes.
+     */
     @Override
     public String getUsername() {
         return this.getEmail();
     }
-   
+
+    /**
+     * Checks if the user's account is not expired.
+     *
+     * @return true if the account is not expired, false otherwise
+     */
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    /**
+     * Checks if the user's account is not locked.
+     *
+     * @return true if the account is not locked, false otherwise
+     */
     @Override
     public boolean isAccountNonLocked() {
         return true;
@@ -88,22 +110,34 @@ public class User implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-       return true;
+        return true;
     }
 
+    /**
+     * Checks if the user's credentials (password) have not expired.
+     *
+     * @return true if the credentials have not expired, false otherwise
+     */
     @Override
     public boolean isEnabled() {
-       return this.isActive();
+        return this.isActive();
     }
 
-    public UserDTO getUserDTOFromUser(User user){
+    /**
+     * Converts a User entity to a UserDTO object.
+     *
+     * @param user the User entity to be converted
+     * @return a UserDTO object containing the relevant information from the
+     * User entity
+     */
+    public UserDTO getUserDTOFromUser(User user) {
         return UserDTO.builder()
-               .id(user.getId())
-               .name(user.getName())
-               .email(user.getEmail())
-               .created_at(user.getCreatedAt().toLocalDateTime())
-               .updated_at(user.getUpdatedAt().toLocalDateTime())
-               .build();
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .created_at(user.getCreatedAt().toLocalDateTime())
+                .updated_at(user.getUpdatedAt().toLocalDateTime())
+                .build();
     }
- 
+
 }

@@ -13,10 +13,6 @@ import com.chatop.api.repositories.IUserRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-/**
- *
- * @author BarbieSophie
- */
 @Service
 @Data
 @AllArgsConstructor
@@ -26,23 +22,35 @@ public class UserService {
     private final IUserRepository userRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
-    public User getUserFromToken(TokenDTO token){
+    /**
+     * Retrieves a user from the token.
+     *
+     * @param token The token containing the user's email.
+     * @return The user object corresponding to the token.
+     * @throws NotFoundException If the user is not found.
+     */
+    public User getUserFromToken(TokenDTO token) {
         LOGGER.info("Obtention de l'utilisateur a partir du token.");
 
         String tokenValue = token.getToken();
         String email = jwtGeneratorService.extractSubject(tokenValue);
         User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
         LOGGER.info("Utilisateur trouve : {}", user.getEmail());
-        
+
         return user;
     }
 
-    public UserDTO getUserById(Integer id){
+    /**
+     * Retrieves a user from the database by their id.
+     *
+     * @param id The unique identifier of the user.
+     * @return The user object corresponding to the provided id.
+     * @throws NotFoundException If the user is not found.
+     */
+    public UserDTO getUserById(Integer id) {
         LOGGER.info("Obtention de l'utilisateur a partir de son id.");
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
         UserDTO userDTO = user.getUserDTOFromUser(user);
         return userDTO;
     }
 }
-
-

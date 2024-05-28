@@ -21,8 +21,9 @@ public class ApplicationConfig {
 
     private final IUserRepository userRepository;
 
-/**
+    /**
      * New PasswordEncoder instance
+     *
      * @return BCryptPasswordEncoder
      */
     @Bean
@@ -30,18 +31,25 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Bean method to create an instance of {@link UserDetailsService}. This
+     * service is responsible for loading user-specific data from the database.
+     *
+     * @return an instance of {@link UserDetailsService} that uses the provided
+     * {@link userRepository}.
+     */
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmail(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-  
     /**
-     * Bean method to create an instance of {@link AuthenticationProvider}.
-     * This service is responsible for loading user-specific data from the database.
+     * Bean method to create an instance of {@link AuthenticationProvider}. This
+     * service is responsible for loading user-specific data from the database.
      *
-     * @return an instance of {@link AuthenticationProvider} that uses the provided {@link userDetailsService}.
+     * @return an instance of {@link AuthenticationProvider} that uses the
+     * provided {@link userDetailsService}.
      */
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -52,13 +60,14 @@ public class ApplicationConfig {
     }
 
     /**
-     * Bean method to create an instance of {@link AuthenticationManager}.
-     * This class is responsible for authenticating users by delegating to the
+     * Bean method to create an instance of {@link AuthenticationManager}. This
+     * class is responsible for authenticating users by delegating to the
      * {@link AuthenticationProvider}.
      *
      * @param configuration The {@link AuthenticationConfiguration} instance.
      * @return An instance of {@link AuthenticationManager}.
-     * @throws Exception If there is an error while creating the authentication manager.
+     * @throws Exception If there is an error while creating the authentication
+     * manager.
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {

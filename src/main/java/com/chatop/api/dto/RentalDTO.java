@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -18,16 +17,19 @@ import lombok.NoArgsConstructor;
 public class RentalDTO {
 
     @Id
-    @NotNull
+    @NotNull(message = "id cannot be empty")
     @Schema(type = "integer", example = "10", description = "Rental identifier")
     private int id;
 
+    @NotNull(message = "name cannot be empty")
     @Schema(type = "string", example = "House near the sea for your vacation", description = "Name of the rental")
     String name;
 
+    @NotNull(message = "surface cannot be empty")
     @Schema(type = "double", example = "150", description = "Surface of the rental")
     Double surface;
 
+    @NotNull(message = "price cannot be empty")
     @Schema(type = "double", example = "800", description = "Price of the rental")
     Double price;
 

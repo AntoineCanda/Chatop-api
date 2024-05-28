@@ -29,6 +29,13 @@ public class RentalService {
     private final UserService userService;
     private final IRentalRepository rentalRepository;
 
+    /**
+     * Retrieves all rentals from the database.
+     *
+     * @return a {@link RentalsDTO} object containing a list of all rentals.
+     * @throws DatabaseException if an error occurs while retrieving the
+     * rentals.
+     */
     public RentalsDTO getAllRentals() {
 
         LOGGER.info("Debut de la recuperation de tous les logements");
@@ -38,39 +45,47 @@ public class RentalService {
             Iterable<Rental> rentals = rentalRepository.findAll();
             rentals.forEach((rental) -> {
                 rentalsDTO.getRentals().add(RentalDTO.builder().id(rental.getId()).name(rental.getName())
-                       .surface(rental.getSurface()).price(rental.getPrice()).description(rental.getDescription())
-                       .picture(rental.getPicture()).build());
+                        .surface(rental.getSurface()).price(rental.getPrice()).description(rental.getDescription())
+                        .picture(rental.getPicture()).build());
             });
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new DatabaseException(e.getMessage());
         }
-       
+
         LOGGER.info("Fin de la recuperation de toutes les locations, liste : {}", rentalsDTO.getRentals());
         return rentalsDTO;
     }
 
-    public RentalDTO getRentalById(int  id) {
+    /**
+     * Retrieves a rental by its id.
+     *
+     * @param id the id of the rental to retrieve
+     * @return a {@link RentalDTO} object containing the details of the rental
+     * @throws DatabaseException if an error occurs while retrieving the rental
+     * @throws NotFoundException if the rental with the given id is not found
+     */
+    public RentalDTO getRentalById(int id) {
         try {
             Rental rental = this.findRentalById(id);
-            
+
             RentalDTO rentalDTO = RentalDTO.builder()
-                .id(rental.getId())
-                .name(rental.getName())
-                .surface(rental.getSurface())
-                .price(rental.getPrice())
-                .description(rental.getDescription())
-                .picture(rental.getPicture())
-                .createdAt(rental.getCreatedAt().toLocalDateTime())
-                .updatedAt(rental.getUpdatedAt().toLocalDateTime())
-                .build();
+                    .id(rental.getId())
+                    .name(rental.getName())
+                    .surface(rental.getSurface())
+                    .price(rental.getPrice())
+                    .description(rental.getDescription())
+                    .picture(rental.getPicture())
+                    .createdAt(rental.getCreatedAt().toLocalDateTime())
+                    .updatedAt(rental.getUpdatedAt().toLocalDateTime())
+                    .build();
 
             return rentalDTO;
-             
+
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
 
-            if(e instanceof NotFoundException) {
+            if (e instanceof NotFoundException) {
                 throw e;
             } else {
                 throw new DatabaseException(e.getMessage());
@@ -78,30 +93,49 @@ public class RentalService {
         }
     }
 
+    /**
+     * Creates a new rental.
+     *
+     * @param tokenDTO the token containing the user's id
+     * @param rentalDTO the details of the rental to be created
+     * @return a {@link ResponseDTO} object containing a message indicating the
+     * success of the operation
+     * @throws DatabaseException if an error occurs while creating the rental
+     */
     public ResponseDTO createRental(TokenDTO tokenDTO, RentalRequestDTO rentalDTO) {
-       try {
+        try {
             Integer ownerId = userService.getUserFromToken(tokenDTO).getId();
-            
+
             Rental rental = Rental.builder()
-                .name(rentalDTO.getName())
-                .surface(rentalDTO.getSurface())
-                .price(rentalDTO.getPrice())
-                .description(rentalDTO.getDescription())
-                .picture(rentalDTO.getPicture())
-                .createdAt(new Timestamp(System.currentTimeMillis()))
-                .updatedAt(new Timestamp(System.currentTimeMillis()))
-                .ownerId(ownerId)
-                .build();
+                    .name(rentalDTO.getName())
+                    .surface(rentalDTO.getSurface())
+                    .price(rentalDTO.getPrice())
+                    .description(rentalDTO.getDescription())
+                    .picture(rentalDTO.getPicture())
+                    .createdAt(new Timestamp(System.currentTimeMillis()))
+                    .updatedAt(new Timestamp(System.currentTimeMillis()))
+                    .ownerId(ownerId)
+                    .build();
 
             rentalRepository.save(rental);
             return ResponseDTO.builder().message("Rental created").build();
 
-       } catch (Exception e) {
-        LOGGER.error(e.getMessage());
-        throw new DatabaseException(e.getMessage());
-       }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
+    /**
+     * Updates an existing rental.
+     *
+     * @param id the id of the rental to update
+     * @param rentalDTO the details of the rental to be updated
+     * @return a {@link ResponseDTO} object containing a message indicating the
+     * success of the operation
+     * @throws DatabaseException if an error occurs while updating the rental
+     * @throws NotFoundException if the rental with the given id is not found
+     */
     public ResponseDTO updateRental(Integer id, RentalRequestDTO rentalDTO) {
         try {
             Rental rental = this.findRentalById(id);

@@ -12,11 +12,19 @@ import org.springframework.web.context.request.WebRequest;
 
 import com.chatop.api.dto.ResponseDTO;
 
-
 @ControllerAdvice
 public class ExceptionProcesser {
+
     private static final Logger logger = LoggerFactory.getLogger(ExceptionProcesser.class);
 
+    /**
+     * Handles {@link BaseApiException} by creating a {@link ResponseEntity}
+     * with the appropriate status, message, and errors.
+     *
+     * @param ex the {@link BaseApiException} to handle
+     * @param request the current web request
+     * @return a {@link ResponseEntity} containing the response data
+     */
     @ExceptionHandler(BaseApiException.class)
     public ResponseEntity<ResponseDTO> handleBaseException(BaseApiException ex, WebRequest request) {
         logger.error("Error occurred: {}", ex.getMessage(), ex);
@@ -26,10 +34,17 @@ public class ExceptionProcesser {
                 .message(ex.getMessage())
                 .errors(ex.getErrors())
                 .build();
-        // Returns a response entity with the constructed response object and HTTP status from the exception.
         return new ResponseEntity<>(response, ex.getHttpStatus());
     }
 
+    /**
+     * Handles unhandled exceptions by creating a {@link ResponseEntity} with
+     * the appropriate status, message, and errors.
+     *
+     * @param ex the unhandled {@link Exception} to handle
+     * @param request the current web request
+     * @return a {@link ResponseEntity} containing the response data
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseDTO> handleException(Exception ex, WebRequest request) {
         logger.error("Unhandled exception occurred: {}", ex.getMessage(), ex);
@@ -41,4 +56,3 @@ public class ExceptionProcesser {
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
-

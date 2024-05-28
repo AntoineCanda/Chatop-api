@@ -1,4 +1,5 @@
 package com.chatop.api.models;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -30,33 +31,33 @@ public class Rental implements Serializable {
     private Integer id;
 
     @NonNull
-    @Column(name="name", length=255)
+    @Column(name = "name", length = 255)
     private String name;
 
     @NonNull
-    @Column(name="surface")
+    @Column(name = "surface")
     private Double surface;
 
     @NonNull
-    @Column(name="price")
+    @Column(name = "price")
     private Double price;
 
     @NonNull
-    @Column(name="picture")
+    @Column(name = "picture")
     private String picture;
 
     @NonNull
-    @Column(name="description", length=2000)
+    @Column(name = "description", length = 2000)
     private String description;
 
     @NonNull
-    @Column (name="owner_id", nullable=false)
+    @Column(name = "owner_id", nullable = false)
     private Integer ownerId;
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     private Timestamp createdAt;
 
-    @Column(name="updated_at")
+    @Column(name = "updated_at")
     private Timestamp updatedAt;
 
 }

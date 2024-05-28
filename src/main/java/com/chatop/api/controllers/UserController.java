@@ -23,16 +23,23 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
     private final UserService userService;
-    
-    @Operation(summary = "Get user by id", description = "Return details of user by id.", tags={"User"})
-            @ApiResponses(value = {
-                    @ApiResponse(responseCode = "200", description = "Details of the user by id.",
-                            content = {@Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = UserDTO.class))}),
-                    @ApiResponse(responseCode = "401", description = "Invalid user. UNAUTHORIZED",
-                            content = @Content)
-            })
-    @SecurityRequirement(name = "Bearer Authentication Required")
+
+    /**
+     * Get user by id. This method returns details of a user by their id.
+     *
+     * @param id The unique identifier of the user.
+     * @return A {@link ResponseEntity} containing the details of the user.
+     */
+    @Operation(summary = "Get user by id", description = "Return details of user by id.", tags = {"User"})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Details of the user by id.",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserDTO.class))}),
+        @ApiResponse(responseCode = "401", description = "Invalid user. UNAUTHORIZED",
+                content = @Content)
+    })
+    @SecurityRequirement(name = "Bearer token")
     @GetMapping("/{id}") // Maps HTTP GET requests to /api/user/{id} to this method
     public ResponseEntity<UserDTO> getUserById(@PathVariable Integer id) {
         // Calls the userService to find a user by their ID and return their details

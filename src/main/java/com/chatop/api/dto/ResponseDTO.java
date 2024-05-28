@@ -20,6 +20,6 @@ public class ResponseDTO {
     private String message;
     @Schema(type = "string", example = "Ok", description = "Status code of the response.")
     private HttpStatus status;
-    @Schema(type = "array", example="User with this email already exists", description = "List of errors that occurred during the operation.")
+    @Schema(type = "array", example = "User with this email already exists", description = "List of errors that occurred during the operation.")
     private List<String> errors;
 }
