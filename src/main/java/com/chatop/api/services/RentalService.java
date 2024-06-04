@@ -27,6 +27,7 @@ public class RentalService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RentalService.class);
     private final UserService userService;
+    private final ImageService imageService;
     private final IRentalRepository rentalRepository;
 
     /**
@@ -44,9 +45,16 @@ public class RentalService {
         try {
             Iterable<Rental> rentals = rentalRepository.findAll();
             rentals.forEach((rental) -> {
-                rentalsDTO.getRentals().add(RentalDTO.builder().id(rental.getId()).name(rental.getName())
-                        .surface(rental.getSurface()).price(rental.getPrice()).description(rental.getDescription())
-                        .picture(rental.getPicture()).build());
+                rentalsDTO.getRentals().add(
+                        RentalDTO.builder()
+                                .id(rental.getId())
+                                .name(rental.getName())
+                                .surface(rental.getSurface())
+                                .price(rental.getPrice())
+                                .description(rental.getDescription())
+                                .picture(rental.getPicture())
+                                .ownerId(rental.getOwnerId())
+                                .build());
             });
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
@@ -76,6 +84,7 @@ public class RentalService {
                     .price(rental.getPrice())
                     .description(rental.getDescription())
                     .picture(rental.getPicture())
+                    .ownerId(rental.getOwnerId())
                     .createdAt(rental.getCreatedAt().toLocalDateTime())
                     .updatedAt(rental.getUpdatedAt().toLocalDateTime())
                     .build();
@@ -111,7 +120,7 @@ public class RentalService {
                     .surface(rentalDTO.getSurface())
                     .price(rentalDTO.getPrice())
                     .description(rentalDTO.getDescription())
-                    .picture(rentalDTO.getPicture())
+                    .picture(imageService.uploadFile(rentalDTO.getPicture()))
                     .createdAt(new Timestamp(System.currentTimeMillis()))
                     .updatedAt(new Timestamp(System.currentTimeMillis()))
                     .ownerId(ownerId)

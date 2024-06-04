@@ -48,7 +48,7 @@ public class MessageController {
         @ApiResponse(responseCode = "401", description = "Invalid user. UNAUTHORIZED", content = @Content)
     })
     @SecurityRequirement(name = "Bearer token")
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<?> createRental(@Valid @RequestBody MessageDTO messageDTO, @RequestHeader("Authorization") String token) {
         TokenDTO tokenDTO = new TokenDTO(token.replace("Bearer ", ""));
         messageService.createMessage(messageDTO, tokenDTO);

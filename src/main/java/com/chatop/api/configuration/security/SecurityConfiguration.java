@@ -55,8 +55,7 @@ public class SecurityConfiguration {
                         antMatcher(HttpMethod.GET, "/v3/api-docs/**"),
                         antMatcher(HttpMethod.GET, "/v3/api-docs**"),
                         antMatcher(HttpMethod.POST, "/api/auth/login"),
-                        antMatcher(HttpMethod.POST, "/api/auth/register"),
-                        antMatcher(HttpMethod.GET, "/images/**")
+                        antMatcher(HttpMethod.POST, "/api/auth/register")
                 )
                 .permitAll()
                 // Authenticate these requests
