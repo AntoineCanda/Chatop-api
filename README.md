@@ -36,6 +36,7 @@ You will need the following software to run this project:
 - [Maven](https://maven.apache.org/install.html) to build the project (current: 3.6.3)
 - [Java 17](https://www.oracle.com/java/technologies/javase-jdk17-downloads.html) to run the project (current: openjdk 17.0.6 2023-01-17)
 - [MySQL](https://dev.mysql.com/downloads/mysql/) to run the database
+- [Cloudinary](https://cloudinary.com/documentation) to upload the file picture of rentals.
 
 ## Getting Started
 
@@ -62,6 +63,7 @@ Follow these instructions to get a copy of the project up and running on your lo
     MYSQLDB_URL=jdbc:mysql://<Set the host and port of your database>/ChatopAPI
     SERVER_PORT=<Set the port for the server>
     JWT_KEY=<Set your JWT secret key>
+    CLOUDINARY_URL=<Set the cloudinary url with your secret key, your api key and dashboard key following>
     ```
 
 4. Create the database and tables:
