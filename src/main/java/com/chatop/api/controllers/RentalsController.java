@@ -47,7 +47,7 @@ public class RentalsController {
         @ApiResponse(responseCode = "401", description = "Access denied because the user is invalid. UNAUTHORIZED",
                 content = @Content)})
     @SecurityRequirement(name = "Bearer token")
-    @GetMapping(value = "/", produces = "application/json")
+    @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<RentalsDTO> getAllRentals() {
         return ResponseEntity.ok(rentalService.getAllRentals());
     }
@@ -91,7 +91,7 @@ public class RentalsController {
         @ApiResponse(responseCode = "401", description = "Access denied because the user is invalid. UNAUTHORIZED",
                 content = @Content)})
     @SecurityRequirement(name = "Bearer token")
-    @PostMapping(value = "/")
+    @PostMapping(value = "")
     public ResponseEntity<ResponseDTO> createRental(@RequestHeader("Authorization") String token, @ModelAttribute RentalRequestDTO rentalRequest) {
         TokenDTO tokenDTO = new TokenDTO(token.replace("Bearer ", ""));
 

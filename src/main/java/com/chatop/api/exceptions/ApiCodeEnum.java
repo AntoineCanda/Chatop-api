@@ -12,5 +12,6 @@ public enum ApiCodeEnum {
     TOKEN_EXPIRED,
     DATABASE_ERROR,
     CREATION_ERROR,
-    TOKEN_ERROR
+    TOKEN_ERROR,
+    UPLOAD_ERROR
 }

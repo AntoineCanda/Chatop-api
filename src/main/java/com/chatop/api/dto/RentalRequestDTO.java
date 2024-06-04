@@ -1,5 +1,7 @@
 package com.chatop.api.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -25,8 +27,7 @@ public class RentalRequestDTO {
     @Schema(type = "double", example = "800", description = "Price of the rental")
     private Double price;
 
-    @Schema(type = "link", example = "https://blog.technavio.org/wp-content/uploads/2018/12/Online-House-Rental-Sites.jpg", description = "Link of a picture of the rental")
-    private String picture;
+    private MultipartFile picture;
 
     @NotNull(message = "Description cannot be empty.")
     @Schema(type = "string", example = "Big house near the sea for 6 persons.", description = "Description of the rental")
